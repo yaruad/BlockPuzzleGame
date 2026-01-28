@@ -13,6 +13,8 @@ public class StageController : MonoBehaviour
     [SerializeField]
     private BlockArrangeSystem blockArrangeSystem; //블록 배치
 
+    public int CurrentScore {  get; private set; } //현재 점수
+
     private BackGroundBlock[] backGroundBlocks;     //생성한 배경 블록 정보 저장
     private int currentDragBlockCount;      //현재 남은 드래그 블록 수
 
@@ -24,6 +26,8 @@ public class StageController : MonoBehaviour
 
     private void Awake()
     {
+        CurrentScore = 0;
+
         //줄이 완성된 블록들을 삭제하기 위해 임시 저장하는 리스트
         filledBlockList = new List<BackGroundBlock>();
 
@@ -77,6 +81,11 @@ public class StageController : MonoBehaviour
 
         //완성된 줄이 있는지 검사하고 완성된 줄의 블록을 별도로 저장
         int filledLineCount = CheckFilledLine();
+
+        //완성된 줄이 없으면 0점, 완성된 줄이 있으면 2의 filledLineCount승 * 10점(10,20,40,80...)
+        int lineScore = filledLineCount == 0 ? 0 : (int)Mathf.Pow(2, filledLineCount - 1) * 10;
+        //점수 계산 (블록 점수 + 줄 점수)
+        CurrentScore += block.ChildBlocks.Length + lineScore;
 
         //줄이 완성된 블록들을 삭제(마지막에 배치한 블록을 기준으로 퍼져나가듯이)
         yield return StartCoroutine(DestroyFilledBlocks(block));
