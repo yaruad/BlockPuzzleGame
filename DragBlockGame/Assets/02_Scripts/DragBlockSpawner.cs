@@ -13,11 +13,10 @@ public class DragBlockSpawner : MonoBehaviour
     [SerializeField]
     private Vector3 SpawnGapAmount = new Vector3(10, 0, 0); //처음 생성할 때 부모와 떨어진 거리
 
+    //외부에서 드래그 블록의 부모Transform[] 배열 정보 열람
+    public Transform[] BlockSpawnPoints => blockSpawnPoints;
 
-    private void Awake()
-    {
 
-    }
 
     public void SpawnBlock()
     {

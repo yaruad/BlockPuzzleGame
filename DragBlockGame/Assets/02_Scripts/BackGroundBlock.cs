@@ -21,4 +21,32 @@ public class BackGroundBlock : MonoBehaviour
         BlockState = BlockState.Fill;
         spriteRenderer.color = color;
     }
+
+    public void EmptyBlock()
+    {
+        BlockState = BlockState.Empty;
+        StartCoroutine("ScaleTo", Vector3.zero);
+    }
+
+    private IEnumerator ScaleTo(Vector3 end)
+    {
+        Vector3 start = transform.localScale;
+        float current = 0f;
+        float percent = 0f;
+        float time = 0.15f;
+
+        while (percent < 1f)
+        {
+            current += Time.deltaTime;
+            percent = current / time;
+
+            transform.localScale = Vector3.Lerp(start, end, percent);
+
+            yield return null;
+        }
+
+        //축소 애니메이션이 끝나면 색을 흰색으로 크기를 원래크기로 변경
+        spriteRenderer.color = Color.white;
+        transform.localScale = Vector3.one;
+    }
 }
