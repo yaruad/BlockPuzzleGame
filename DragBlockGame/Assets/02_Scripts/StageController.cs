@@ -12,8 +12,11 @@ public class StageController : MonoBehaviour
     private DragBlockSpawner dragBlockSpawner;
     [SerializeField]
     private BlockArrangeSystem blockArrangeSystem; //블록 배치
+    [SerializeField]
+    private UIController uiController;  //게임 오버되었을 때 UI활성화
 
     public int CurrentScore {  get; private set; } //현재 점수
+    public int HighScore { get; private set; } //최고 점수
 
     private BackGroundBlock[] backGroundBlocks;     //생성한 배경 블록 정보 저장
     private int currentDragBlockCount;      //현재 남은 드래그 블록 수
@@ -27,6 +30,7 @@ public class StageController : MonoBehaviour
     private void Awake()
     {
         CurrentScore = 0;
+        HighScore = PlayerPrefs.GetInt("HighScore");
 
         //줄이 완성된 블록들을 삭제하기 위해 임시 저장하는 리스트
         filledBlockList = new List<BackGroundBlock>();
@@ -96,12 +100,26 @@ public class StageController : MonoBehaviour
         {
             yield return StartCoroutine(SpawnDragBlocks());
         }
-        yield return new WaitForEndOfFrame();
+        
 
         if (IsGameOver())
         {
             Debug.Log("GameOver");
+
+            if( CurrentScore >= HighScore)
+            {
+                PlayerPrefs.SetInt("HighScore", CurrentScore);
+            }
+
+            if (filledLineCount >= 1)
+            {
+                yield return new WaitForSeconds(1.0f);
+            }
+            //게임 오버되었을 때 출력하는 Panel UI를 활성화하고, 스크린샷, 점수 등 갱신
+            uiController.GameOver();
         }
+
+        yield return new WaitForEndOfFrame();
     }
 
     private int CheckFilledLine()
