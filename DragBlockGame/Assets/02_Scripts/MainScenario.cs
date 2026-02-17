@@ -12,6 +12,9 @@ public class MainScenario : MonoBehaviour
 
     private void Awake()
     {
+#if UNITY_STANDALONE
+Screen.SetResolution(720, 1080, true);
+#endif
         HighScoreText.text = PlayerPrefs.GetInt("HighScore").ToString();
     }
 
@@ -22,10 +25,10 @@ public class MainScenario : MonoBehaviour
 
     public void BtnClickGameExit()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         //UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 }
